@@ -1,6 +1,7 @@
 const path = require('path');
 
 const express = require('express');
+const csrf = require('csurf');
 
 const db = require('./data/database');
 const authRoutes = require('./routes/auth.routes');
@@ -14,6 +15,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 //parsing incoming forms => gain access to req.body
 app.use(express.urlencoded({ extended: true }));
+
+//all incoming requests which are NOT GET requests now need to have a csrf token attached
+//requests which are NOT GET requests that don't have a valid csrf token will be denied
+app.use(csrf());
 
 app.use(authRoutes);
 
