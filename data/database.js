@@ -1,20 +1,24 @@
 const { MongoClient } = require('mongodb');
 
-//establish local MongoDB server
-const client = new MongoClient('mongodb://localhost:27017');
+let database;
 
 const connectToDatabase = async () => {
-  //connect to local MongoDB server
-  await client.connect();
+  //establish & connect to local MongoDB server
+  const client = await MongoClient.connect('mongodb://localhost:27017');
 
   //connect to a specific database
-  const database = client.db('the-shop');
+  database = client.db('the-shop');
+};
 
+const getDb = () => {
   if (!database) {
-    throw new Error ('Unable to connect to database!');
+    throw new Error('Unable to connect to database!');
   }
 
   return database;
 }
 
-module.exports = connectToDatabase;
+module.exports = {
+  connectToDatabase: connectToDatabase,
+  getDb: getDb
+};
