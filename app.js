@@ -8,8 +8,11 @@ const csrf = require('csurf');
 const createSessionConfig = require('./config/session');
 const db = require('./data/database');
 const addCSRFTokenMiddleware = require('./middlewares/csrf-token');
-const authRoutes = require('./routes/auth.routes');
 const errorHandlerMiddleware = require('./middlewares/error-handler');
+const checkAuthStatusMiddleware = require('./middlewares/check-auth');
+const authRoutes = require('./routes/auth.routes');
+const productsRoutes = require('./routes/products.routes')
+const baseRoutes = require('./routes/base.routes')
 
 const app = express();
 
@@ -32,8 +35,11 @@ app.use(csrf());
 app.use(addCSRFTokenMiddleware);
 //all incoming requests which are NOT GET requests now need to have a csrf token attached
 //requests which are NOT GET requests that don't have a valid csrf token will be denied
+app.use(checkAuthStatusMiddleware);
 
 app.use(authRoutes);
+app.use(baseRoutes);
+app.use(productsRoutes);
 
 app.use(errorHandlerMiddleware);
 

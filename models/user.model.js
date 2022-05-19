@@ -10,18 +10,26 @@ class User {
     this.address = {
       street: street,
       postalCode: postal,
-      city: city
+      city: city,
     };
   }
 
+  getUserWithSameEmail() {
+    return db.getDb().collection('users').findOne({ email: this.email });
+  }
+
+  hasMatchingPassword(hashedPassword) {
+    return bcrypt.compare(this.password, hashedPassword);
+  }
+
   async signup() {
-    const hashedPw = await bcrypt.hash(this.password, 12);
+    const hashedPassword = await bcrypt.hash(this.password, 12);
 
     await db.getDb().collection('users').insertOne({
       email: this.email,
-      password: hashedPw,
+      password: hashedPassword,
       name: this.name,
-      address: this.address
+      address: this.address,
     });
   }
 }
