@@ -2,6 +2,7 @@ const path = require('path');
 
 const express = require('express');
 
+const connectToDatabase = require('./data/database');
 const authRoutes = require('./routes/auth.routes');
 
 const app = express();
@@ -13,6 +14,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(authRoutes);
 
-app.listen(3000, () => {
-  console.log('listening on port 3000');
-});
+
+connectToDatabase()
+  .then(() => {
+    app.listen(3000, () => {
+      console.log('listening on port 3000');
+    });
+  })
+  .catch((err) => {
+    console.log('Failed to connect to database');
+    console.log(err);
+  });
