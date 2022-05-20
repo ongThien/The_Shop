@@ -53,9 +53,9 @@ const signup = async (req, res, next) => {
   //if something goes wrong in asynchronous operations, the express error handler middleware will not be activated
   //therefore you have to handle it manually in the try - catch block, forward the error (if any - after catching by the next function)
   try {
-    const existsALready = await user.existsAlready();
+    const existsAlready = await user.existsAlready();
 
-    if (existsALready) {
+    if (existsAlready) {
       sessionFlash.flashDataToSession(
         req,
         {
