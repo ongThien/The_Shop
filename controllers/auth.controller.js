@@ -4,18 +4,34 @@ const validation = require('../util/validation');
 const sessionFlash = require('../util/session-flash');
 
 const getSignup = (req, res) => {
-  res.render('customer/auth/signup');
+  let sessionData = sessionFlash.getSessionData(req);
+
+  if (!sessionData) {
+    sessionData = {
+      email: '',
+      confirmEmail: '',
+      password: '',
+      fullname: '',
+      street: '',
+      postal: '',
+      city: ''
+    };
+  }
+
+  res.render('customer/auth/signup', { inputData: sessionData });
 };
 
 const signup = async (req, res, next) => {
   const enteredData = {
     email: req.body.email,
+    confirmEmail: req.body.confirmEmail,
     password: req.body.password,
     fullname: req.body.fullname,
     street: req.body.street,
-    postalCode: req.body.postal,
+    postal: req.body.postal,
     city: req.body.city,
   };
+
   if (
     !validation.userDetailsAreValid(
       enteredData.email,
@@ -78,7 +94,16 @@ const signup = async (req, res, next) => {
 };
 
 const getLogin = (req, res) => {
-  res.render('customer/auth/login');
+  let sessionData = sessionFlash.getSessionData(req);
+
+  if (!sessionData) {
+    sessionData = {
+      email: '',
+      password: ''
+    };
+  }
+
+  res.render('customer/auth/login', { inputData: sessionData});
 };
 
 const login = async (req, res, next) => {
