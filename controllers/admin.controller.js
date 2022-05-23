@@ -1,7 +1,15 @@
 const Product = require('../models/product.model');
 
-const getProduct = (req, res) => {
-  res.render('admin/products/all-products');
+const getProducts = async (req, res, next) => {
+  try {
+    const products = await Product.findAll();
+    res.render('admin/products/all-products', { products: products });
+  } catch (err) {
+    next(err);
+    return;
+  }
+  
+  
 }
 
 const getNewProduct = (req, res) => {
@@ -27,7 +35,7 @@ const createNewProduct = async (req, res, next) => {
 }
 
 module.exports = {
-  getProduct: getProduct,
+  getProducts: getProducts,
   getNewProduct: getNewProduct,
   createNewProduct: createNewProduct
 }
