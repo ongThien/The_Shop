@@ -15,6 +15,7 @@ const authRoutes = require('./routes/auth.routes');
 const productsRoutes = require('./routes/products.routes');
 const baseRoutes = require('./routes/base.routes');
 const adminRoutes = require('./routes/admin.routes');
+const cartRoutes = require('./routes/cart.routes');
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.use('/products/assets', express.static(path.join(__dirname, 'product-data'))
 
 //parsing incoming forms => gain access to req.body
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 //initialize session middleware
 const sessionConfig = createSessionConfig();
@@ -45,6 +47,7 @@ app.use(checkAuthStatusMiddleware);
 app.use(authRoutes);
 app.use(baseRoutes);
 app.use(productsRoutes);
+app.use('/cart', cartRoutes);
 app.use(protectRoutesMiddleware);
 app.use('/admin', adminRoutes);
 
