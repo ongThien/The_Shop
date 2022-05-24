@@ -14,8 +14,14 @@
       <% } %>
     </ul>
     <div id="cart-total">
-      <p>Total: <span id="cart-total-price">$<%= locals.cart.totalPrice.toFixed(2) %></span></p>
-      <button class="btn">Buy</button>
+      <p>Total: $<span id="cart-total-price"><%= locals.cart.totalPrice.toFixed(2) %></span></p>
+      <% if (locals.isAuth) { %>
+        <form action="/orders" method="POST">
+          <button class="btn">Buy</button>
+        </form>
+      <% } else { %>
+        <p id="cart-total-fallback">Login to proceed & purchase</p>
+      <% } %>
     </div>
   </main>
 <% include('../../shared/includes/footer') %>

@@ -2,7 +2,7 @@ const isEmpty = (value) => {
   return !value || value.trim() === '';
 };
 
-const userCredentialsAreValid = (name, password) => {
+const userCredentialsAreValid = (email, password) => {
   return (
     email && email.includes('@') && password && password.trim().length >= 6
   );
