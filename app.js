@@ -11,6 +11,7 @@ const errorHandlerMiddleware = require('./middlewares/error-handler');
 const checkAuthStatusMiddleware = require('./middlewares/check-auth');
 const protectRoutesMiddleware = require('./middlewares/protect-routes');
 const cartMiddleware = require('./middlewares/cart');
+const updateCartPricesMiddleware = require('./middlewares/update-cart-prices');
 const authRoutes = require('./routes/auth.routes');
 const productsRoutes = require('./routes/products.routes');
 const baseRoutes = require('./routes/base.routes');
@@ -39,6 +40,7 @@ app.use(expressSession(sessionConfig));
 app.use(csrf());
 //initialize cart
 app.use(cartMiddleware);
+app.use(updateCartPricesMiddleware);
 //distribute generated tokens to all other middlewares / route handles functions & views
 app.use(addCSRFTokenMiddleware);
 //all incoming requests which are NOT GET requests now need to have a csrf token attached

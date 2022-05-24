@@ -6,7 +6,7 @@ class Product {
   constructor(productData) {
     this.title = productData.title;
     this.summary = productData.summary;
-    this.price = +productData.price.toFixed(2); //typecast string to int
+    this.price = +productData.price; //typecast string to int
     this.description = productData.description;
     this.image = productData.image; //the name of the image file
     this.updateImageData();
@@ -45,6 +45,22 @@ class Product {
     });
   }
 
+  static async findMultiple(ids) {
+    const productIds = ids.map(function(id) {
+      return new mongodb.ObjectId(id);
+    })
+    
+    const products = await db
+      .getDb()
+      .collection('products')
+      .find({ _id: { $in: productIds } })
+      .toArray();
+
+    return products.map(function (productDocument) {
+      return new Product(productDocument);
+    });
+  }
+
   updateImageData() {
     this.imagePath = `product-data/images/${this.image}`;
     this.imageUrl = `/products/assets/images/${this.image}`;
@@ -77,7 +93,7 @@ class Product {
     }
   }
 
-  async replaceImage(newImage) {
+  replaceImage(newImage) {
     this.image = newImage;
     this.updateImageData();
   }

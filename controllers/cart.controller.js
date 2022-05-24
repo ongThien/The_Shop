@@ -1,6 +1,11 @@
 const Product = require('../models/product.model');
 
-const getCart = (req, res) => {
+const getCart = async (req, res) => {
+  const cart = res.locals.cart;
+
+  await cart.updatePrices();
+
+
   res.render('customer/cart/cart');
 };
 
