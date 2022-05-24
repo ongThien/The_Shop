@@ -53,12 +53,10 @@ class Product {
     const products = await db
       .getDb()
       .collection('products')
-      .find({ _id: { $in: productIds } })
+      .find({ _id: { $in: productIds } })//$in: find all products where the product ids are specified in a given array
       .toArray();
 
-    return products.map(function (productDocument) {
-      return new Product(productDocument);
-    });
+    return products.map(productDocument => new Product(productDocument));
   }
 
   updateImageData() {

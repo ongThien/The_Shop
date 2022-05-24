@@ -14,7 +14,7 @@ class Order {
         weekday: 'short',
         day: 'numeric',
         month: 'long',
-        year: 'numeric'
+        year: 'numeric',
       });
     }
     this.id = orderId;
@@ -52,7 +52,7 @@ class Order {
       .getDb()
       .collection('orders')
       .find({ 'userData._id': uid })
-      .sort({ _id: -1 })
+      .sort({ _id: -1 }) //sort by id with descending order as each id created by mongodb has a timestamp implicitly
       .toArray();
 
     return this.transformOrderDocuments(orders);
@@ -70,12 +70,17 @@ class Order {
   save() {
     if (this.id) {
       //updating
+      const orderId = new mongodb.ObjectId(this.id);
+      return db
+        .getDb()
+        .collection('orders')
+        .updateOne({ _id: orderId }, { $set: { status: this.status } });
     } else {
       const orderDocument = {
         userData: this.userData,
         productData: this.productData,
         date: new Date(),
-        status: this.status
+        status: this.status,
       };
 
       return db.getDb().collection('orders').insertOne(orderDocument);

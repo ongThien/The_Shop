@@ -7,19 +7,17 @@ class Cart {
     this.totalPrice = totalPrice;
   }
 
+  //in case of user purchase items which prices are updated while the items are already in the cart
+  //or the items are deleted/going to be deleted/out of stock in the database
   async updatePrices() {
-    const productIds = this.items.map(function (item) {
-      return item.product.id;
-    });
+    const productIds = this.items.map((item) => item.product.id);
 
     const products = await Product.findMultiple(productIds);
 
     const deletableCartItemProductIds = [];
 
     for (const cartItem of this.items) {
-      const product = products.find(function (prod) {
-        return prod.id === cartItem.product.id;
-      });
+      const product = products.find((prod) => prod.id === cartItem.product.id);
 
       if (!product) {
         // product was deleted!
@@ -35,9 +33,9 @@ class Cart {
     }
 
     if (deletableCartItemProductIds.length > 0) {
-      this.items = this.items.filter(function (item) {
-        return deletableCartItemProductIds.indexOf(item.product.id) < 0;
-      });
+      this.items = this.items.filter(
+        item => deletableCartItemProductIds.indexOf(item.product.id) < 0
+      );
     }
 
     // re-calculate cart totals
@@ -45,8 +43,8 @@ class Cart {
     this.totalPrice = 0;
 
     for (const item of this.items) {
-      this.totalQuantity = this.totalQuantity + item.quantity;
-      this.totalPrice = this.totalPrice + item.totalPrice;
+      this.totalQuantity += item.quantity;
+      this.totalPrice += item.totalPrice;
     }
   }
 
@@ -80,19 +78,19 @@ class Cart {
       const item = this.items[i];
       if (item.product.id === productId && newQuantity > 0) {
         const cartItem = { ...item };
-        const quantityChange = newQuantity - +item.quantity
+        const quantityChange = newQuantity - +item.quantity;
         cartItem.quantity = newQuantity;
         cartItem.totalPrice = newQuantity * item.product.price;
         this.items[i] = cartItem;
 
         this.totalQuantity += quantityChange;
         this.totalPrice += quantityChange * item.product.price;
-        return { updatedItemPrice: cartItem.totalPrice};
+        return { updatedItemPrice: cartItem.totalPrice };
       } else if (item.product.id === productId && newQuantity <= 0) {
         this.items.splice(i, 1);
         this.totalQuantity -= item.quantity;
         this.totalPrice -= item.totalPrice;
-        return { updatedItemPrice: 0};
+        return { updatedItemPrice: 0 };
       }
     }
   }
